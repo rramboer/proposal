@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Photo Gallery</title>
+    <meta name="description" content="Ryan & Amanda">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Updock&display=swap" rel="stylesheet">
+    <meta property="og:image" content="img/16.jpg">
+    <meta property="og:title" content="Ryan & Amanda - Proposal Photo Gallery">
+
+    <style>
+        * {
+            font-family: "Updock", cursive;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            background-color: black;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #blurred-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(20px);
+            z-index: 1;
+        }
+
+        #gallery {
+            z-index: 2;
+            position: relative;
+            max-width: 100%;
+            max-height: 100vh;
+        }
+
+        #counter {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="blurred-bg"></div>
+
+    <img id="gallery" src="img/1.jpg" alt="Photo Gallery">
+
+    <div id="counter"></div>
+
+    <script>
+        const IGNORED_PHOTOS = [
+            165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178,
+            179, 180, 181, 182, 196, 204, 205, 206, 207, 208, 209, 210, 211, 212,
+            213, 214, 215, 216
+        ];
+
+        let currentImage = 1;
+        const totalImages = 226;
+        const totalImagesShown = totalImages - IGNORED_PHOTOS.length;
+
+        function updateImages() {
+            const imagePath = 'img/' + currentImage + '.jpg';
+            // document.getElementById('gallery').src = imagePath;
+            // document.getElementById('blurred-bg').style.backgroundImage = 'url(' + imagePath + ')';
+            // document.getElementById('counter').innerText = currentImage + '/' + totalImages;
+
+            if (IGNORED_PHOTOS.includes(currentImage)) {
+                showNextImage();
+            } else {
+                document.getElementById('gallery').src = imagePath;
+                document.getElementById('blurred-bg').style.backgroundImage = 'url(' + imagePath + ')';
+                document.getElementById('counter').innerText = currentImage - IGNORED_PHOTOS.filter(photo => photo < currentImage).length + '/' + totalImagesShown;
+            }
+        }
+
+        function showNextImage() {
+            currentImage = (currentImage % totalImages) + 1;
+            updateImages();
+        }
+
+        function showPrevImage() {
+            currentImage = (currentImage - 1) === 0 ? totalImages : currentImage - 1;
+            updateImages();
+        }
+
+        updateImages();
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowRight' || event.key === 'Enter' || event.key === ' ') {
+                showNextImage();
+            } else if (event.key === 'ArrowLeft') {
+                showPrevImage();
+            }
+        });
+
+        document.addEventListener('click', function () {
+            showNextImage();
+        });
+
+        document.addEventListener('dblclick', function () {
+            showPrevImage();
+        });
+    </script>
+</body>
+
+</html>

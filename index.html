@@ -6,125 +6,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proposal Photo Gallery</title>
     <meta name="description" content="Ryan & Amanda">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" type="text/javascript"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/css/nanogallery2.min.css" rel="stylesheet"
+        type="text/css">
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/jquery.nanogallery2.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Updock&display=swap" rel="stylesheet">
-    <meta property="og:image" content="img/16.jpg">
-    <meta property="og:title" content="Ryan & Amanda - Proposal Photo Gallery">
 
     <style>
-        * {
+        body {
+            background-color: rgb(18, 19, 22);
             font-family: "Updock", cursive;
-            font-weight: 400;
+            font-weight: 300;
             font-style: normal;
         }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100vw;
+        .gallery-title {
+            text-align: center;
+            color: whitesmoke;
+            font-size: 100px;
             margin: 0;
-            background-color: black;
-            overflow: hidden;
-            position: relative;
+            padding: 0;
+            font-weight: 300;
         }
 
-        #blurred-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            filter: blur(20px);
-            z-index: 1;
+        .gallery-date {
+            text-align: center;
+            color: whitesmoke;
+            font-size: 50px;
+            margin: 0;
+            padding: 0;
+            font-weight: 300;
         }
 
-        #gallery {
-            z-index: 2;
-            position: relative;
-            max-width: 100%;
-            max-height: 100vh;
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
         }
 
-        #counter {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            color: white;
-            z-index: 3;
-            background: rgba(0, 0, 0, 0.75);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 25px;
+        ::-webkit-scrollbar-track {
+            background: rgb(18, 19, 22);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Modern CSS for other browsers */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #888 rgb(18, 19, 22);
         }
     </style>
 </head>
 
 <body>
-    <div id="blurred-bg"></div>
 
-    <img id="gallery" src="img/1.jpg" alt="Photo Gallery">
+    <h1 class="gallery-title">Ryan & Amanda</h1>
+    <h2 class="gallery-date">September 28, 2024</h2>
 
-    <div id="counter"></div>
+    <div id="nanogallery2"></div>
 
     <script>
-        const IGNORED_PHOTOS = [
-            165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178,
-            179, 180, 181, 182, 196, 204, 205, 206, 207, 208, 209, 210, 211, 212,
-            213, 214, 215, 216
-        ];
+        $(document).ready(function () {
 
-        let currentImage = 1;
-        const totalImages = 226;
-        const totalImagesShown = totalImages - IGNORED_PHOTOS.length;
-
-        function updateImages() {
-            const imagePath = 'img/' + currentImage + '.jpg';
-            // document.getElementById('gallery').src = imagePath;
-            // document.getElementById('blurred-bg').style.backgroundImage = 'url(' + imagePath + ')';
-            // document.getElementById('counter').innerText = currentImage + '/' + totalImages;
-
-            if (IGNORED_PHOTOS.includes(currentImage)) {
-                showNextImage();
-            } else {
-                document.getElementById('gallery').src = imagePath;
-                document.getElementById('blurred-bg').style.backgroundImage = 'url(' + imagePath + ')';
-                document.getElementById('counter').innerText = currentImage - IGNORED_PHOTOS.filter(photo => photo < currentImage).length + '/' + totalImagesShown;
-            }
-        }
-
-        function showNextImage() {
-            currentImage = (currentImage % totalImages) + 1;
-            updateImages();
-        }
-
-        function showPrevImage() {
-            currentImage = (currentImage - 1) === 0 ? totalImages : currentImage - 1;
-            updateImages();
-        }
-
-        updateImages();
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'ArrowRight' || event.key === 'Enter' || event.key === ' ') {
-                showNextImage();
-            } else if (event.key === 'ArrowLeft') {
-                showPrevImage();
-            }
-        });
-
-        document.addEventListener('click', function () {
-            showNextImage();
-        });
-
-        document.addEventListener('dblclick', function () {
-            showPrevImage();
+            $("#nanogallery2").nanogallery2({
+                thumbnailDisplayOutsideScreen: true,
+                thumbnailHeight: '200 XSauto SMauto',
+                thumbnailWidth: 'auto XS80 SM120',
+                thumbnailToolbarImage: {
+                    bottomRight: 'download',
+                },
+                thumbnailLabel: {
+                    valign: 'bottom',
+                    align: 'left',
+                    position: 'overImage',
+                    display: true,
+                    hideIcons: true,
+                    titleFontSize: '1.7em',
+                },
+                thumbnailWaitImageLoaded: true,
+                thumbnailDisplayTransition: 'slideUp',
+                thumbnailHoverEffect2: 'toolsAppear|scale120',
+                viewerTools: {
+                    topRight: 'download, rotateLeft, rotateRight, zoomButton, fullscreenButton, closeButton',
+                },
+                items: Array.from({ length: 226 }, (_, index) => {
+                    const id = index + 1;
+                    return {
+                        src: `img/${id}.jpg`,
+                        srct: `img_thumbnails/${id}.jpg`,
+                        title: `${id}`
+                    };
+                }),
+            });
         });
     </script>
+
 </body>
 
 </html>
